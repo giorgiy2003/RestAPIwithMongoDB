@@ -17,6 +17,7 @@ func main() {
 	router.POST("/person", Handler.PostPerson)
 	router.DELETE("/person/:id", Handler.DeleteById)
 	router.PUT("/person/:id", Handler.UpdatePersonById)
-	router.Logger.Fatal(router.Start(":8080"))
 	defer Repository.Disconnect()
+	router.Logger.Fatal(router.Start(":8080"))
+	
 }
