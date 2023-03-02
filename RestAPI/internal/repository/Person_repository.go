@@ -2,7 +2,6 @@ package Repository
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	Model "myapp/internal/model"
@@ -67,7 +66,7 @@ func ReadOne(ctx context.Context, id string) (*Model.Person, error) {
 
 	err = collection.FindOne(ctx, bson.D{{Key: "_id", Value: pid}}).Decode(&person)
 	if err == mongo.ErrNoDocuments {
-		return nil, fmt.Errorf("record does not exist: %w", err)
+		return nil, fmt.Errorf("Записи не существует: %w", err)
 	} else if err != nil {
 		return nil, err
 	}
@@ -105,7 +104,7 @@ func Update(ctx context.Context, id string, p Model.Person) error {
 	update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "firstName", Value: p.FirstName}, bson.E{Key: "lastName", Value: p.LastName}, bson.E{Key: "phone", Value: p.Phone}, bson.E{Key: "email", Value: p.Email}}}}
 	result, _ := collection.UpdateOne(ctx, filter, update)
 	if result.MatchedCount != 1 {
-		return errors.New("no matched document found for update")
+		return fmt.Errorf("Записи с id = %s не найдено", id)
 	}
 	return nil
 }
@@ -120,7 +119,7 @@ func Delete(ctx context.Context, id string) error {
 		return err
 	}
 	if result.DeletedCount != 1 {
-		return errors.New("no matched document found for delete")
+		return fmt.Errorf("Записи с id = %s не найдено", id)
 	}
 	return nil
 }
