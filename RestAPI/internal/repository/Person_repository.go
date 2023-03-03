@@ -24,6 +24,13 @@ func OpenTable() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	//Используем в случае подключение к БД из контейнера :)
+	/*clientOptions := options.Client().ApplyURI("mongodb://mongodb")
+	mongoclient, err = mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		return err
+	}*/
+
 	mongoconn := options.Client().ApplyURI("mongodb://localhost:27017")
 	mongoclient, err = mongo.Connect(ctx, mongoconn)
 	if err != nil {
